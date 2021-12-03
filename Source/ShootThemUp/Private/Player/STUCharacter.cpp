@@ -4,13 +4,18 @@
 #include "Player/STUCharacter.h"
 #include <Camera/CameraComponent.h>
 #include <Components/InputComponent.h>
+#include <GameFramework/SpringArmComponent.h>
 
 ASTUCharacter::ASTUCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
+	SpringArmComponent->SetupAttachment(GetRootComponent());
+	SpringArmComponent->bUsePawnControlRotation = true;
+
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
-	CameraComponent->SetupAttachment(GetRootComponent());
+	CameraComponent->SetupAttachment(SpringArmComponent);
 }
 
 void ASTUCharacter::BeginPlay()
@@ -33,7 +38,10 @@ void ASTUCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	{
 		PlayerInputComponent->BindAxis("MoveForward", this, &ASTUCharacter::MoveForward);
 		PlayerInputComponent->BindAxis("MoveRight", this, &ASTUCharacter::MoveRight);
+		PlayerInputComponent->BindAxis("LookUp", this, &ASTUCharacter::AddControllerPitchInput);
+		PlayerInputComponent->BindAxis("TurnAround", this, &ASTUCharacter::AddControllerYawInput);
 	}
+
 
 }
 
@@ -46,4 +54,5 @@ void ASTUCharacter::MoveRight(float Amount)
 {
 	AddMovementInput(GetActorRightVector(), Amount);
 }
+
 
