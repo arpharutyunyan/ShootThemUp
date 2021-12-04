@@ -16,7 +16,7 @@ class SHOOTTHEMUP_API ASTUCharacter : public ACharacter
 
 public:
 
-	ASTUCharacter();
+	ASTUCharacter(const FObjectInitializer& InitObj);
 
 protected:
 
@@ -35,8 +35,18 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	bool IsRunning() const;
+
 private:
+
+	bool WhantsToRun = false;
+	bool IsMovingForward = false;
+
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
+
+	void OnStartRunning();
+	void OnStopRuning();
 
 };

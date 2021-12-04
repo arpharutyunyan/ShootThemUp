@@ -5,8 +5,10 @@
 #include <Camera/CameraComponent.h>
 #include <Components/InputComponent.h>
 #include <GameFramework/SpringArmComponent.h>
+#include <Components/STUCharacterMovementComponent.h>
 
-ASTUCharacter::ASTUCharacter()
+ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj) 
+	: Super(InitObj.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -40,6 +42,9 @@ void ASTUCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		PlayerInputComponent->BindAxis("MoveRight", this, &ASTUCharacter::MoveRight);
 		PlayerInputComponent->BindAxis("LookUp", this, &ASTUCharacter::AddControllerPitchInput);
 		PlayerInputComponent->BindAxis("TurnAround", this, &ASTUCharacter::AddControllerYawInput);
+		PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASTUCharacter::Jump);
+		PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ASTUCharacter::OnStartRunning);
+		PlayerInputComponent->BindAction("Run", IE_Released, this, &ASTUCharacter::OnStopRuning);
 	}
 
 
@@ -47,6 +52,8 @@ void ASTUCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ASTUCharacter::MoveForward(float Amount)
 {
+	IsMovingForward = Amount > 0.0f;
+
 	AddMovementInput(GetActorForwardVector(), Amount);
 }
 
@@ -55,4 +62,18 @@ void ASTUCharacter::MoveRight(float Amount)
 	AddMovementInput(GetActorRightVector(), Amount);
 }
 
+void ASTUCharacter::OnStartRunning()
+{
+	WhantsToRun = true;
+}
+
+void ASTUCharacter::OnStopRuning()
+{
+	WhantsToRun = false;
+}
+
+bool ASTUCharacter::IsRunning() const
+{
+	return WhantsToRun && IsMovingForward && !GetVelocity().IsZero();
+}
 
