@@ -45,8 +45,7 @@ void ASTUCharacter::Tick(float DeltaTime)
 	const auto Health = HealthComponent->GetHealth();
 	HelthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 
-	TakeDamage(0.1f, FDamageEvent{}, Controller, this);
-
+	
 }
 
 void ASTUCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
