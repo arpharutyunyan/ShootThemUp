@@ -9,7 +9,9 @@
 #include <Components/STUHealthComponent.h>
 #include <Components/TextRenderComponent.h>
 
-ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj) 
+DEFINE_LOG_CATEGORY_STATIC(CharacterLog, All, All)
+
+ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj)
 	: Super(InitObj.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -42,6 +44,8 @@ void ASTUCharacter::Tick(float DeltaTime)
 
 	const auto Health = HealthComponent->GetHealth();
 	HelthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+
+	TakeDamage(0.1f, FDamageEvent{}, Controller, this);
 
 }
 
