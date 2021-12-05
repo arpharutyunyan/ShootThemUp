@@ -6,6 +6,8 @@
 #include <Components/InputComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Components/STUCharacterMovementComponent.h>
+#include <Components/STUHealthComponent.h>
+#include <Components/TextRenderComponent.h>
 
 ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj) 
 	: Super(InitObj.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -18,17 +20,28 @@ ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj)
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
 	CameraComponent->SetupAttachment(SpringArmComponent);
+
+	HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("HealthComponent");
+	HelthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HelthTextComponent");
+	HelthTextComponent->SetupAttachment(GetRootComponent());
+
 }
 
 void ASTUCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	check(HealthComponent);
+	check(HelthTextComponent);
+
 }
 
 void ASTUCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	const auto Health = HealthComponent->GetHealth();
+	HelthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 
 }
 
