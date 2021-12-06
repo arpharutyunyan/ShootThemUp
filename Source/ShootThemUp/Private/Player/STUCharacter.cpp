@@ -42,6 +42,8 @@ void ASTUCharacter::BeginPlay()
 	HealthComponent->OnDeath.AddUObject(this, &ASTUCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ASTUCharacter::OnHealthChanged);
 
+	LandedDelegate.AddDynamic(this, &ASTUCharacter::OnGroundLanded);
+
 }
 
 void ASTUCharacter::OnHealthChanged(float Health)
@@ -58,19 +60,15 @@ void ASTUCharacter::Tick(float DeltaTime)
 void ASTUCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	check(PlayerInputComponent);
 
-	if (PlayerInputComponent)
-	{
-		PlayerInputComponent->BindAxis("MoveForward", this, &ASTUCharacter::MoveForward);
-		PlayerInputComponent->BindAxis("MoveRight", this, &ASTUCharacter::MoveRight);
-		PlayerInputComponent->BindAxis("LookUp", this, &ASTUCharacter::AddControllerPitchInput);
-		PlayerInputComponent->BindAxis("TurnAround", this, &ASTUCharacter::AddControllerYawInput);
-		PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASTUCharacter::Jump);
-		PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ASTUCharacter::OnStartRunning);
-		PlayerInputComponent->BindAction("Run", IE_Released, this, &ASTUCharacter::OnStopRuning);
-	}
-
-
+	PlayerInputComponent->BindAxis("MoveForward", this, &ASTUCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ASTUCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("LookUp", this, &ASTUCharacter::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("TurnAround", this, &ASTUCharacter::AddControllerYawInput);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASTUCharacter::Jump);
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ASTUCharacter::OnStartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &ASTUCharacter::OnStopRuning);
 }
 
 void ASTUCharacter::MoveForward(float Amount)
@@ -127,3 +125,16 @@ void ASTUCharacter::OnDeath()
 	}
 }
 
+
+void ASTUCharacter::OnGroundLanded(const FHitResult& Hit)
+{
+	const auto FallVelocityZ = -GetVelocity().Z;
+	UE_LOG(CharacterLog, Display, TEXT("On Landed %f "), FallVelocityZ);
+
+	if (FallVelocityZ < LandedDamageVelocity.X) return;
+
+	const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
+	UE_LOG(CharacterLog, Display, TEXT("FinalDamage %f "), FinalDamage);
+	TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
+
+}
