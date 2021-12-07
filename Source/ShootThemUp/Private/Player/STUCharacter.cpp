@@ -21,6 +21,7 @@ ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj)
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bUsePawnControlRotation = true;
+	SpringArmComponent->SocketOffset = FVector(0.0f, 100.0f, 80.0f);
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
 	CameraComponent->SetupAttachment(SpringArmComponent);
@@ -28,7 +29,7 @@ ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj)
 	HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("HealthComponent");
 	HelthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HelthTextComponent");
 	HelthTextComponent->SetupAttachment(GetRootComponent());
-
+	HelthTextComponent->SetOwnerNoSee(true);
 }
 
 void ASTUCharacter::BeginPlay()
