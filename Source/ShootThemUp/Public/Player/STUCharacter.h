@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class USTUHealthComponent;
 class UTextRenderComponent;
+class ASTUBaseWeapon;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUCharacter : public ACharacter
@@ -43,6 +44,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 		FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+		TSubclassOf<ASTUBaseWeapon> WeaponClass;
+
 	virtual void BeginPlay() override;
 
 
@@ -74,5 +78,7 @@ private:
 	void OnDeath();
 
 	void OnHealthChanged(float Health);
+
+	void SpawnWeapon();
 
 };

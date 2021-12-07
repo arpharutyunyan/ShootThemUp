@@ -9,6 +9,7 @@
 #include <Components/STUHealthComponent.h>
 #include <Components/TextRenderComponent.h>
 #include <GameFramework/Controller.h>
+#include <Weapon/STUBaseWeapon.h>
 
 DEFINE_LOG_CATEGORY_STATIC(CharacterLog, All, All)
 
@@ -44,6 +45,7 @@ void ASTUCharacter::BeginPlay()
 
 	LandedDelegate.AddDynamic(this, &ASTUCharacter::OnGroundLanded);
 
+	SpawnWeapon();
 }
 
 void ASTUCharacter::OnHealthChanged(float Health)
@@ -54,7 +56,7 @@ void ASTUCharacter::OnHealthChanged(float Health)
 void ASTUCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 }
 
 void ASTUCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -136,5 +138,15 @@ void ASTUCharacter::OnGroundLanded(const FHitResult& Hit)
 	const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
 	UE_LOG(CharacterLog, Display, TEXT("FinalDamage %f "), FinalDamage);
 	TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
+}
 
+void ASTUCharacter::SpawnWeapon()
+{
+	if (!GetWorld()) return;
+	const auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
+	if (Weapon)
+	{
+		FAttachmentTransformRules AttachmentRule(EAttachmentRule::SnapToTarget, false);
+		Weapon->AttachToComponent(GetMesh(), AttachmentRule, "WeaponSocket");
+	}
 }
