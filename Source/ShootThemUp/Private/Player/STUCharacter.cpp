@@ -8,8 +8,9 @@
 #include <Components/STUCharacterMovementComponent.h>
 #include <Components/STUHealthComponent.h>
 #include <Components/TextRenderComponent.h>
+#include <Components/STUWeaponComponent.h>
 #include <GameFramework/Controller.h>
-#include <Weapon/STUBaseWeapon.h>
+
 
 DEFINE_LOG_CATEGORY_STATIC(CharacterLog, All, All)
 
@@ -30,6 +31,8 @@ ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj)
 	HelthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HelthTextComponent");
 	HelthTextComponent->SetupAttachment(GetRootComponent());
 	HelthTextComponent->SetOwnerNoSee(true);
+
+	WeaponComponent = CreateDefaultSubobject<USTUWeaponComponent>("WeaponComponent");
 }
 
 void ASTUCharacter::BeginPlay()
@@ -46,7 +49,6 @@ void ASTUCharacter::BeginPlay()
 
 	LandedDelegate.AddDynamic(this, &ASTUCharacter::OnGroundLanded);
 
-	SpawnWeapon();
 }
 
 void ASTUCharacter::OnHealthChanged(float Health)
@@ -64,6 +66,7 @@ void ASTUCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
+	check(WeaponComponent);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASTUCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASTUCharacter::MoveRight);
@@ -72,6 +75,7 @@ void ASTUCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASTUCharacter::Jump);
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ASTUCharacter::OnStartRunning);
 	PlayerInputComponent->BindAction("Run", IE_Released, this, &ASTUCharacter::OnStopRuning);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Fire);
 }
 
 void ASTUCharacter::MoveForward(float Amount)
@@ -141,13 +145,3 @@ void ASTUCharacter::OnGroundLanded(const FHitResult& Hit)
 	TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
 }
 
-void ASTUCharacter::SpawnWeapon()
-{
-	if (!GetWorld()) return;
-	const auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
-	if (Weapon)
-	{
-		FAttachmentTransformRules AttachmentRule(EAttachmentRule::SnapToTarget, false);
-		Weapon->AttachToComponent(GetMesh(), AttachmentRule, "WeaponSocket");
-	}
-}
