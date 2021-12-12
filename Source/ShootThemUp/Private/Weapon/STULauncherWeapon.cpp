@@ -29,6 +29,7 @@ void ASTULauncherWeapon::MakeShot()
 	if (Projectile)
 	{
 		Projectile->SetShotDiraction(Diraction);
+		Projectile->SetOwner(GetOwner());
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 
