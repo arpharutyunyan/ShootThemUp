@@ -19,11 +19,14 @@ public:
 	ASTUBaseWeapon();
 
 	FOnClipsEmptySignature OnClipsEmpty;
+	FWeaponUIData GetUIData() const { return UIData; }
 
 	virtual void StartFire();
 	virtual void StopFire();
 	void ChangeClip();
 	bool CanReload() const;
+
+
 
 
 protected:
@@ -39,6 +42,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 		FAmmoData DefaultAmmo {15, 10, false};
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+		FWeaponUIData UIData;
 
 	virtual void BeginPlay() override;
 	virtual void MakeShot();
