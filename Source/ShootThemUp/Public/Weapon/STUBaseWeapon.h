@@ -20,6 +20,7 @@ public:
 
 	FOnClipsEmptySignature OnClipsEmpty;
 	FWeaponUIData GetUIData() const { return UIData; }
+	FAmmoData GetAmmoData() const { return CurrentAmmo; }
 
 	virtual void StartFire();
 	virtual void StopFire();
