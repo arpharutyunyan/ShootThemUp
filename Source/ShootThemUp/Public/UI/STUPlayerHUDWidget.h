@@ -8,6 +8,7 @@
 #include "STUPlayerHUDWidget.generated.h"
 
 class USTUWeaponComponent;
+class USTUHealthComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUPlayerHUDWidget : public UUserWidget
@@ -33,5 +34,6 @@ public:
 
 private:
 	USTUWeaponComponent* GetWeaponComponent() const;
+	USTUHealthComponent* GetHealthComponent() const;
 
 };
