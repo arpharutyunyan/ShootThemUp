@@ -26,8 +26,7 @@ public:
 	virtual void StopFire();
 	void ChangeClip();
 	bool CanReload() const;
-
-
+	bool TryToAddAmmo(int32 ClipsAmount);
 
 
 protected:
@@ -53,11 +52,14 @@ protected:
 	void DecreaseAmmo();
 	bool IsAmmoEmpty() const;
 	bool IsClipEmpty() const;
+	bool IsAmmoFull() const;
 	
 	void LogAmmo();
 
 	bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
 	void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
+
+	
 
 
 	APlayerController* GetPlayerController() const;

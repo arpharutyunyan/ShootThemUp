@@ -24,11 +24,14 @@ void ASTUBasePickup::BeginPlay()
 	Super::BeginPlay();
 	
 	check(CollosionComponent);
+
+	GenerateRotationYaw();
 }
 
 void ASTUBasePickup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	AddActorLocalRotation(FRotator(0.0f, RotationYaw, 0.0f));
 
 }
 
@@ -59,6 +62,7 @@ void ASTUBasePickup::PickupWasTaken()
 
 void ASTUBasePickup::Respawn()
 {
+	GenerateRotationYaw();
 	CollosionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	if (GetRootComponent())
 	{
@@ -69,5 +73,11 @@ void ASTUBasePickup::Respawn()
 bool ASTUBasePickup::GivePickupTo(APawn* PlayerPawn)
 {
 	return false;
+}
+
+void ASTUBasePickup::GenerateRotationYaw()
+{
+	const auto Diraction = FMath::RandBool() ? 1.0f : -1.0f;
+	RotationYaw = FMath::RandRange(1.0f, 2.0f) * Diraction;
 }
 
