@@ -8,7 +8,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipsEmptySignature, ASTUBaseWeapon*);
 
 //healthComponent
 DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, float);
 
 // weapon
 USTRUCT(BlueprintType)
@@ -29,12 +29,13 @@ struct FAmmoData
 
 
 //weaponComponent
+
 USTRUCT(BlueprintType)
 struct FWeaponData
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 		TSubclassOf<ASTUBaseWeapon> WeaponClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
