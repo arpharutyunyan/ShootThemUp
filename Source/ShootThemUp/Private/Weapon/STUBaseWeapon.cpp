@@ -7,6 +7,8 @@
 #include <DrawDebugHelpers.h>
 #include <GameFramework/Character.h>
 #include <GameFramework/Controller.h>
+#include <NiagaraFunctionLibrary.h>
+#include <NiagaraComponent.h>
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeapon, All, All)
 
@@ -33,20 +35,11 @@ void ASTUBaseWeapon::BeginPlay()
 
 }
 
-void ASTUBaseWeapon::StartFire()
-{
+void ASTUBaseWeapon::StartFire(){}
 
-}
+void ASTUBaseWeapon::StopFire(){}
 
-void ASTUBaseWeapon::StopFire()
-{
-
-}
-
-void ASTUBaseWeapon::MakeShot()
-{
-
-}
+void ASTUBaseWeapon::MakeShot(){}
 
 APlayerController* ASTUBaseWeapon::GetPlayerController() const
 {
@@ -192,4 +185,14 @@ bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount)
 		UE_LOG(LogWeapon, Display, TEXT("Bullets were added"));
 	}
 	return true;
+}
+
+UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX()
+{
+	return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, //
+														WeaponMesh, //
+														MuzzleSocketName, //
+														FVector::ZeroVector, //
+														FRotator::ZeroRotator, //
+														EAttachLocation::SnapToTarget, true);
 }
