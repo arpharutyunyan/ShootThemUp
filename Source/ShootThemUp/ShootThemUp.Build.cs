@@ -31,6 +31,7 @@ public class ShootThemUp : ModuleRules
 			"ShootThemUp/Public/UI", 
 			"ShootThemUp/Public/AI", 
 			"ShootThemUp/Public/AI/Tasks", 
+			"ShootThemUp/Public/AI/EQS", 
 			"ShootThemUp/Public/AI/Services", 
 			"ShootThemUp/Public/Animations", 
 			"ShootThemUp/Public/Pickups",
