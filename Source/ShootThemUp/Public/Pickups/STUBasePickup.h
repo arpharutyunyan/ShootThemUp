@@ -31,6 +31,8 @@ protected:
 public:	
 	
 	virtual void Tick(float DeltaTime) override;
+	bool CouldBeTaken() const;
+	FTimerHandle RespawnTimerHandle;
 
 private:
 
