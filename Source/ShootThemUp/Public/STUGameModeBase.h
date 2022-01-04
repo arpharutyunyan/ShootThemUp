@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include <STUCoreTypes.h>
 #include "STUGameModeBase.generated.h"
 
+class AAIController;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
@@ -15,4 +17,15 @@ class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
 public:
 	ASTUGameModeBase();
 
+	virtual void StartPlay() override;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Game")
+		TSubclassOf<AAIController> AIControllerClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Game")
+		FGameData GameData;
+
+private:
+	void SpawnBots();
 };
