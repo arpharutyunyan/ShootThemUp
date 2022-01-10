@@ -59,4 +59,6 @@ private:
 
 	void StartRespawn(AController* Controller);
 
+	void GameOver();
+
 };
