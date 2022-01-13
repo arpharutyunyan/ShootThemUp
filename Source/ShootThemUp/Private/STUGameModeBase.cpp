@@ -31,6 +31,7 @@ void ASTUGameModeBase::StartPlay()
 	CreateTeamsInfo();
 	CurrentRound = 1;
 	StartRound();
+	SetMatchState(ESTUMatchState::InProgress);
 }
 
 void ASTUGameModeBase::SpawnBots()
@@ -211,4 +212,13 @@ void ASTUGameModeBase::GameOver()
 			Pawn->DisableInput(nullptr);
 		}
 	}
+	SetMatchState(ESTUMatchState::GameOver);
+}
+
+void ASTUGameModeBase::SetMatchState(ESTUMatchState State)
+{
+	if (MatchState == State) return;
+
+	MatchState = State;
+	OnMatchStateChanged.Broadcast(MatchState);
 }
