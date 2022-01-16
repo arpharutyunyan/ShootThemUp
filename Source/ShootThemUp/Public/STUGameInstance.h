@@ -11,5 +11,15 @@ UCLASS()
 class SHOOTTHEMUP_API USTUGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
-	
+
+public:
+	FName GetStartupLevelName() const { return StartupLevelName; }
+	FName GetMenuLevelName() const { return MenuLevelName; }
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+		FName StartupLevelName = NAME_None;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+		FName MenuLevelName = NAME_None;
 };
