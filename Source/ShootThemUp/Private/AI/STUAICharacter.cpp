@@ -6,6 +6,10 @@
 #include <GameFramework/CharacterMovementComponent.h>
 #include "Components/STUAIWeaponComponent.h"
 #include <BrainComponent.h>
+#include <Components/STUHealthComponent.h>
+#include <Components/WidgetComponent.h>
+#include <UI/STUHealthBarWidget.h>
+
 
 ASTUAICharacter::ASTUAICharacter(const FObjectInitializer& InitObj)
 	: Super(InitObj.SetDefaultSubobjectClass<USTUAIWeaponComponent>("WeaponComponent"))
@@ -20,6 +24,23 @@ ASTUAICharacter::ASTUAICharacter(const FObjectInitializer& InitObj)
 		GetCharacterMovement()->RotationRate = FRotator(0.0f, 200.0f, 0.0f);
 	}
 
+	HealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("HealthWidgetComponent");
+	HealthWidgetComponent->SetupAttachment(GetRootComponent());
+	HealthWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	HealthWidgetComponent->SetDrawAtDesiredSize(true);
+}
+
+void ASTUAICharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	check(HealthWidgetComponent);
+}
+
+void ASTUAICharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	UpdateHealthWidgetVisibility();
 }
 
 void ASTUAICharacter::OnDeath()
@@ -31,4 +52,25 @@ void ASTUAICharacter::OnDeath()
 	{
 		STUController->BrainComponent->Cleanup();
 	}
+}
+
+void ASTUAICharacter::OnHealthChanged(float Health, float HealthDelta)
+{
+	Super::OnHealthChanged(Health, HealthDelta);
+	const auto HealthBarWidget = Cast<USTUHealthBarWidget>(HealthWidgetComponent->GetUserWidgetObject());
+	if (!HealthBarWidget) return;
+	HealthBarWidget->SetHealthPercent(HealthComponent->GetHealthPercent());
+
+}
+
+void ASTUAICharacter::UpdateHealthWidgetVisibility()
+{
+	if (!GetWorld() || //
+		!GetWorld()->GetFirstPlayerController() || //
+		!GetWorld()->GetFirstPlayerController()->GetPawnOrSpectator()) return;
+
+	const auto PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawnOrSpectator()->GetActorLocation();
+	const auto Distance = FVector::Distance(PlayerLocation, GetActorLocation());
+
+	HealthWidgetComponent->SetVisibility(Distance < HealthVisibilityDistance, true);
 }
