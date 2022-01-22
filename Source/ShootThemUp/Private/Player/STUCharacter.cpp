@@ -20,7 +20,7 @@ ASTUCharacter::ASTUCharacter(const FObjectInitializer& InitObj)
 	PrimaryActorTick.bCanEverTick = true;
 
 	HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("HealthComponent");
-	
+
 	WeaponComponent = CreateDefaultSubobject<USTUWeaponComponent>("WeaponComponent");
 }
 
@@ -42,7 +42,7 @@ void ASTUCharacter::BeginPlay()
 
 void ASTUCharacter::OnHealthChanged(float Health, float HealthDelta)
 {
-	
+
 }
 
 void ASTUCharacter::Tick(float DeltaTime)
@@ -78,6 +78,7 @@ void ASTUCharacter::OnDeath()
 
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	WeaponComponent->StopFire();
+	WeaponComponent->Zoom(false);
 
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetSimulatePhysics(true);

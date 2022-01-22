@@ -33,6 +33,8 @@ public:
 	bool IsAmmoEmpty() const;
 	bool IsAmmoFull() const;
 
+	virtual void Zoom(bool Enabled) {}
+
 
 protected:
 
