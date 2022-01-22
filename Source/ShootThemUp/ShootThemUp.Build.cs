@@ -39,6 +39,7 @@ public class ShootThemUp : ModuleRules
 			"ShootThemUp/Public/Weapon/Components",
 			"ShootThemUp/Public/Menu",
 			"ShootThemUp/Public/Menu/UI",
+			"ShootThemUp/Public/Sound",
 		});
 
 		// Uncomment if you are using Slate UI
